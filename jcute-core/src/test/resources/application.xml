@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+
+	<include>classpath:config.xml</include>
+	
+	<config>
+		<server>
+			<port>9527</port>
+		</server>
+	</config>
+	
+</application>
