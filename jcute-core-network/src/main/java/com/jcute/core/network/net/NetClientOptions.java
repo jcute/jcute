@@ -1,5 +1,10 @@
 package com.jcute.core.network.net;
 
-public interface NetClientOptions{
+import java.nio.charset.Charset;
 
+public interface NetClientOptions{
+	
+	public Charset getCharset();
+	public void setCharset(Charset charset);
+	
 }
