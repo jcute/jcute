@@ -24,18 +24,18 @@ public class TestNetClient{
 				return new NetClientHandler() {
 					@Override
 					public void onConnect(ChannelHandlerContext context) throws Exception{
-						System.out.println(context.channel().remoteAddress());
+						System.out.println("on connect " + context.channel());
 					}
 					@Override
 					public void unConnect(ChannelHandlerContext context) throws Exception{
-						System.out.println(context.channel().remoteAddress());
+						System.out.println("un connect "+context.channel());
 					}
 					public void onException(ChannelHandlerContext context,Throwable cause) throws Exception{
 						cause.printStackTrace();
 					}
 					@Override
 					public void onMessage(ChannelHandlerContext context,Object message) throws Exception{
-						System.out.println(message);
+						System.out.println("on message" +message);
 					}
 				};
 			}
@@ -43,8 +43,9 @@ public class TestNetClient{
 		netClientOptions.setHandlerFactory(netClientHandlerFactory);
 		NetClient netClient = netWorkManager.createNetClient(netClientOptions);
 		netClient.start();
-		
+		System.out.println(netWorkManager.getNetClients());
 		Thread.sleep(1000);
+		System.out.println(netWorkManager.getNetClients());
 		
 		netClient.close();
 		netWorkManager.close();

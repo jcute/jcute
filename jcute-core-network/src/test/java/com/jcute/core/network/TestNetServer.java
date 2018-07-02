@@ -24,11 +24,11 @@ public class TestNetServer{
 				return new AbstractNetServerHandler() {
 					@Override
 					public void onConnect(ChannelHandlerContext context) throws Exception{
-						System.out.println(context.channel().remoteAddress());
+						System.out.println(context.channel());
 					}
 					@Override
 					public void unConnect(ChannelHandlerContext context) throws Exception{
-						System.out.println(context.channel().remoteAddress());
+						System.out.println(context.channel());
 					}
 					public void onException(ChannelHandlerContext context,Throwable cause) throws Exception{
 						cause.printStackTrace();

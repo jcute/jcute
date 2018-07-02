@@ -48,7 +48,7 @@ public class DefaultNetClient extends AbstractNetClient{
 				channelPipeline.addLast(new DefaultNetClientHandler(getNetClientOptions().getNetClientHandler()));
 			}
 		});
-		ChannelFuture channelFuture = bootstrap.connect(this.getBindNetWorkAddress().toSocketAddress());
+		ChannelFuture channelFuture = bootstrap.connect(this.getNetClientOptions().getNetWorkAddress().toSocketAddress());
 		channelFuture.addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception{
