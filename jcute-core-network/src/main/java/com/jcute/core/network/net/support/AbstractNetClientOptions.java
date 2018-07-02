@@ -56,7 +56,7 @@ public abstract class AbstractNetClientOptions implements NetClientOptions{
 	public NetClientHandler getNetClientHandler(){
 		return this.netClientHandlerFactory.createHandler();
 	}
-	
+
 	@Override
 	public void setHandlerFactory(NetClientHandlerFactory handlerFactory){
 		if(null == handlerFactory){
@@ -64,7 +64,7 @@ public abstract class AbstractNetClientOptions implements NetClientOptions{
 		}
 		this.netClientHandlerFactory = handlerFactory;
 	}
-	
+
 	@Override
 	public void setNetWorkAddress(NetWorkAddress netWorkAddress){
 		if(null == netWorkAddress){
@@ -72,7 +72,7 @@ public abstract class AbstractNetClientOptions implements NetClientOptions{
 		}
 		this.netWorkAddress = netWorkAddress;
 	}
-	
+
 	@Override
 	public NetWorkAddress getNetWorkAddress(){
 		return this.netWorkAddress;

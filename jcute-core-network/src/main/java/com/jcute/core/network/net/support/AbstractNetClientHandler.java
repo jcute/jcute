@@ -22,7 +22,7 @@ public abstract class AbstractNetClientHandler implements NetClientHandler{
 	}
 
 	@Override
-	public void onMessage(ChannelHandlerContext context,Object message)throws Exception{
+	public void onMessage(ChannelHandlerContext context,Object message) throws Exception{
 
 	}
 
