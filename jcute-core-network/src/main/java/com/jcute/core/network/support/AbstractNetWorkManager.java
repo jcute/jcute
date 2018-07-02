@@ -14,6 +14,8 @@ import com.jcute.core.network.NetWorkManagerOptions;
 import com.jcute.core.network.NetWorkThreadChecker;
 import com.jcute.core.network.NetWorkThreadFactory;
 import com.jcute.core.network.net.NetClient;
+import com.jcute.core.network.net.NetClientEvent;
+import com.jcute.core.network.net.NetClientListener;
 import com.jcute.core.network.net.NetClientOptions;
 import com.jcute.core.network.net.NetServer;
 import com.jcute.core.network.net.NetServerEvent;
@@ -191,7 +193,23 @@ public abstract class AbstractNetWorkManager extends AbstractStable<NetWorkManag
 
 	@Override
 	public NetClient createNetClient(NetClientOptions options){
-		return null;
+		if(null == options){
+			options = this.doCreateNetClientOptions();
+		}
+		NetClient netClient = this.doCreateNetClient(options);
+		netClient.attachStartSuccessListener(new NetClientListener() {
+			@Override
+			public void execute(NetClientEvent event) throws Exception{
+				netClients.add(event.getNetClient());
+			}
+		});
+		netClient.attachClosingListener(new NetClientListener() {
+			@Override
+			public void execute(NetClientEvent event) throws Exception{
+				netClients.remove(event.getNetClient());
+			}
+		});
+		return netClient;
 	}
 
 	@Override
@@ -229,5 +247,9 @@ public abstract class AbstractNetWorkManager extends AbstractStable<NetWorkManag
 	protected abstract NetServerOptions doCreateNetServerOptions();
 
 	protected abstract NetServer doCreateNetServer(NetServerOptions netServerOptions);
+
+	protected abstract NetClientOptions doCreateNetClientOptions();
+
+	protected abstract NetClient doCreateNetClient(NetClientOptions netClientOptions);
 
 }

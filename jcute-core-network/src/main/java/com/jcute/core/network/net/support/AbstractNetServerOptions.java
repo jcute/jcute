@@ -45,7 +45,9 @@ public abstract class AbstractNetServerOptions implements NetServerOptions{
 	public NetServerDecoder getNetServerDecoder(){
 		return this.netServerHandlerFactory.createDecoder();
 	}
-
+	
+	
+	
 	@Override
 	public NetWorkAddress getNetWorkAddress(){
 		return this.netWorkAddress;

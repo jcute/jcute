@@ -8,22 +8,22 @@ public abstract class AbstractNetClientHandler implements NetClientHandler{
 
 	@Override
 	public void onConnect(ChannelHandlerContext context) throws Exception{
-		
+
 	}
 
 	@Override
 	public void unConnect(ChannelHandlerContext context) throws Exception{
-		
+
 	}
 
 	@Override
-	public void onExcetpion(ChannelHandlerContext context,Throwable cause) throws Exception{
-		
+	public void onException(ChannelHandlerContext context,Throwable cause) throws Exception{
+
 	}
 
 	@Override
-	public void onMessage(ChannelHandlerContext context,Object message){
-		
+	public void onMessage(ChannelHandlerContext context,Object message)throws Exception{
+
 	}
-	
+
 }

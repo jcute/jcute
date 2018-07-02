@@ -18,7 +18,7 @@ public class DefaultNetServerOptions extends AbstractNetServerOptions{
 
 	@Override
 	protected NetWorkAddress doCreateDefaultNetWorkAddress(){
-		return new DefaultNetWorkAddress("0.0.0.0",0);
+		return new DefaultNetWorkAddress();
 	}
 
 	@Override

@@ -10,8 +10,8 @@ public interface NetClientHandler extends NetWorkHandler{
 	
 	public void unConnect(ChannelHandlerContext context)throws Exception;
 	
-	public void onExcetpion(ChannelHandlerContext context,Throwable cause)throws Exception;
+	public void onException(ChannelHandlerContext context,Throwable cause)throws Exception;
 	
-	public void onMessage(ChannelHandlerContext context,Object message);
+	public void onMessage(ChannelHandlerContext context,Object message)throws Exception;
 	
 }
