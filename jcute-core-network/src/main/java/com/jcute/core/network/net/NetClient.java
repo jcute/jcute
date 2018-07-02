@@ -2,8 +2,9 @@ package com.jcute.core.network.net;
 
 import com.jcute.core.network.NetWorkAddress;
 import com.jcute.core.network.NetWorkManager;
+import com.jcute.core.toolkit.cycle.Stable;
 
-public interface NetClient{
+public interface NetClient extends Stable<NetClientEvent,NetClientListener>{
 
 	public NetWorkManager getNetWorkManager();
 
