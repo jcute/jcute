@@ -197,7 +197,7 @@ public abstract class AbstractPluginManager extends AbstractStable<PluginManager
 	protected void doStart() throws Exception{
 		for(Plugin plugin : this.plugins){
 			try{
-				plugin.start();
+				plugin.onStart();
 				logger.debug("plugin start success {}",this.toString());
 			}catch(Exception e){
 				e.printStackTrace();
@@ -210,7 +210,7 @@ public abstract class AbstractPluginManager extends AbstractStable<PluginManager
 	protected void doClose() throws Exception{
 		for(Plugin plugin : this.plugins){
 			try{
-				plugin.close();
+				plugin.onClose();
 				logger.debug("plugin close success {}",this.toString());
 			}catch(Exception e){
 				logger.warn(e.getMessage(),e);

@@ -8,6 +8,8 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>jcute-core</module>
+		<module>jcute-core-json</module>
+		<module>jcute-core-net</module>
 		<module>jcute-core-network</module>
 		<module>jcute-plugin-cache</module>
 		<module>jcute-plugin-transaction</module>
@@ -32,6 +34,7 @@
 		<junit.version>4.12</junit.version>
 
 		<netty.version>4.1.25.Final</netty.version>
+		<jackson.version>2.9.6</jackson.version>
 
 	</properties>
 	<dependencyManagement>
@@ -92,6 +95,12 @@
 				<groupId>io.netty</groupId>
 				<artifactId>netty-codec-http</artifactId>
 				<version>${netty.version}</version>
+			</dependency>
+			<!-- jackson -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
 			</dependency>
 
 		</dependencies>

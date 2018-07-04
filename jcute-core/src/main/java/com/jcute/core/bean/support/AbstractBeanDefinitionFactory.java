@@ -25,14 +25,14 @@ public abstract class AbstractBeanDefinitionFactory extends AbstractStable<BeanD
 	protected BeanDefinitionResolver beanDefinitionResolver;
 	protected ConfigSourceManager configSourceManager;
 	protected ProxyManager proxyManager;
-
+	
 	public AbstractBeanDefinitionFactory(){
 		this.configSourceManager = this.createConfigSourceManager();
-		this.beanDefinitionRegistry = this.createBeanDefinitionRegistry();
 		this.proxyManager = this.createProxyManager();
+		this.beanDefinitionRegistry = this.createBeanDefinitionRegistry();
 		this.beanDefinitionResolver = this.createBeanDefinitionResolver(this,this.beanDefinitionRegistry);
 	}
-
+	
 	@Override
 	protected void doStart() throws Exception{
 		this.beanDefinitionRegistry.attachBeanDefinition(this.createBeanDefinition(this));

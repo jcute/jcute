@@ -48,13 +48,13 @@ public class DefaultConfigSourceForXml extends AbstractConfigSource{
 		if(null == nodeList || nodeList.getLength() == 0){
 			return null;
 		}
-		for(int i=0;i<names.length;i++){
+		for(int i = 0;i < names.length;i++){
 			String name = names[i];
 			if(StringUtils.isEmpty(name)){
 				return null;
 			}
 			name = name.trim();
-			for(int j=0;j<nodeList.getLength();j++){
+			for(int j = 0;j < nodeList.getLength();j++){
 				Node node = nodeList.item(j);
 				if(!node.getNodeName().equals(name)){
 					continue;
