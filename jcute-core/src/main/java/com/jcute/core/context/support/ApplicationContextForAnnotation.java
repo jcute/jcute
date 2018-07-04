@@ -37,7 +37,6 @@ public class ApplicationContextForAnnotation extends AbstractApplicationContext{
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationContextForAnnotation.class);
 
 	private Class<?> runner;
-	private PluginManager pluginManager;
 
 	public ApplicationContextForAnnotation(Class<?> runner){
 		super();
@@ -45,25 +44,24 @@ public class ApplicationContextForAnnotation extends AbstractApplicationContext{
 			throw new IllegalArgumentException("runner class must not be null");
 		}
 		this.runner = runner;
-		this.pluginManager = new DefaultPluginManagerForAnnotation(this);
 	}
-
+	
 	@Override
 	protected BeanDefinitionFactory createBeanDefinitionFactory(){
 		return new DefaultBeanDefinitionFactory();
 	}
-
+	
+	@Override
+	protected PluginManager createPluginManager(ApplicationContext applicationContext){
+		return new DefaultPluginManagerForAnnotation(applicationContext);
+	}
+	
 	@Override
 	protected void beforeDoStart(BeanDefinitionFactory beanDefinitionFactory){
 		String packageName = this.runner.getPackage() == null ? "" : this.runner.getPackage().getName();
 		Set<String> packageNames = new LinkedHashSet<String>();
 		packageNames.add(packageName);
 		this.getTargetScannerPackages(packageName,packageNames);
-		try{
-			this.pluginManager.start();
-		}catch(Exception e){
-			logger.warn("start plugin manager failed {}",e.getMessage(),e);
-		}
 		Scanner scanner = new DefaultScanner();
 		for(String pattern : packageNames){
 			scanner.attachClassPattern(pattern);
@@ -92,11 +90,7 @@ public class ApplicationContextForAnnotation extends AbstractApplicationContext{
 
 	@Override
 	protected void beforeDoClose(BeanDefinitionFactory beanDefinitionFactory){
-		try{
-			this.pluginManager.close();
-		}catch(Exception e){
-			logger.warn("close plugin manager failed {}",e.getMessage(),e);
-		}
+		
 	}
 
 	protected void getTargetScannerPackages(String parent,Set<String> packageNames){

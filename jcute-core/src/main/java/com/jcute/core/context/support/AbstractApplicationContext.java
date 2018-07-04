@@ -14,6 +14,7 @@ import com.jcute.core.config.ConfigSourceManager;
 import com.jcute.core.context.ApplicationContext;
 import com.jcute.core.context.ApplicationContextEvent;
 import com.jcute.core.context.ApplicationContextListener;
+import com.jcute.core.plugin.PluginManager;
 import com.jcute.core.toolkit.cycle.support.AbstractStable;
 import com.jcute.core.toolkit.logging.Logger;
 import com.jcute.core.toolkit.logging.LoggerFactory;
@@ -24,16 +25,18 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 	private static final Logger logger = LoggerFactory.getLogger(AbstractApplicationContext.class);
 
 	protected BeanDefinitionFactory beanDefinitionFactory;
-	
+	protected PluginManager pluginManager;
+
 	public AbstractApplicationContext(){
+		this.pluginManager = this.createPluginManager(this);
 		this.beanDefinitionFactory = this.createBeanDefinitionFactory();
 	}
-	
+
 	@Override
 	public ConfigSourceManager getConfigSourceManager(){
 		return this.beanDefinitionFactory.getConfigSourceManager();
 	}
-	
+
 	@Override
 	public BeanDefinitionFactory getBeanDefinitionFactory(){
 		return this.beanDefinitionFactory;
@@ -133,6 +136,12 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 	@Override
 	protected void doStart() throws Exception{
 		long time = System.currentTimeMillis();
+		try{
+			this.pluginManager.start();
+		}catch(Exception e){
+			logger.warn("start plugin manager failed {}",e.getMessage(),e);
+			throw e;
+		}
 		this.beforeDoStart(this.beanDefinitionFactory);
 		this.beanDefinitionFactory.getBeanDefinitionRegistry().attachBeanDefinition(this.beanDefinitionFactory.createBeanDefinition(this));
 		this.beanDefinitionFactory.start();
@@ -142,6 +151,12 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 	@Override
 	protected void doClose() throws Exception{
 		long time = System.currentTimeMillis();
+		try{
+			this.pluginManager.close();
+		}catch(Exception e){
+			logger.warn("close plugin manager failed {}",e.getMessage(),e);
+			throw e;
+		}
 		this.beforeDoClose(this.beanDefinitionFactory);
 		this.beanDefinitionFactory.close();
 		logger.info("Application Context Close Success , Time Of Use {} Millisecond",System.currentTimeMillis() - time);
@@ -150,6 +165,8 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 	protected abstract void beforeDoStart(BeanDefinitionFactory beanDefinitionFactory);
 
 	protected abstract void beforeDoClose(BeanDefinitionFactory beanDefinitionFactory);
+
+	protected abstract PluginManager createPluginManager(ApplicationContext applicationContext);
 
 	protected abstract BeanDefinitionFactory createBeanDefinitionFactory();
 
