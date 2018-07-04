@@ -42,6 +42,7 @@ public class TestNetClient{
 		netClientOptions.setHandlerFactory(netClientHandlerFactory);
 		NetClient netClient = netWorkManager.createNetClient(netClientOptions);
 		netClient.start();
+		System.out.println(netClient.getBindNetWorkAddress());
 		System.out.println(netWorkManager.getNetClients());
 		Thread.sleep(1000);
 		System.out.println(netWorkManager.getNetClients());

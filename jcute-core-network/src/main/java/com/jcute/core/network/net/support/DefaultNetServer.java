@@ -11,6 +11,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.CountDownLatch;
 
 import com.jcute.core.network.NetWorkAddress;
 import com.jcute.core.network.NetWorkManager;
@@ -19,9 +20,9 @@ import com.jcute.core.toolkit.logging.Logger;
 import com.jcute.core.toolkit.logging.LoggerFactory;
 
 public class DefaultNetServer extends AbstractNetServer{
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(DefaultNetServer.class);
-	
+
 	private Channel channel;
 	private NetWorkAddress address;
 
@@ -36,6 +37,7 @@ public class DefaultNetServer extends AbstractNetServer{
 
 	@Override
 	protected void doStart() throws Exception{
+		final CountDownLatch latch = new CountDownLatch(1);
 		ServerBootstrap serverBootstrap = new ServerBootstrap();
 		serverBootstrap.channel(NioServerSocketChannel.class);
 		serverBootstrap.group(this.netWorkManager.getBossEventLoopGroup(),this.netWorkManager.getWorkEventLoopGroup());
@@ -58,16 +60,24 @@ public class DefaultNetServer extends AbstractNetServer{
 					address = NetWorkAddress.create((InetSocketAddress)channel.localAddress());
 					logger.debug("net server start success {}",address);
 				}
+				latch.countDown();
 			}
 		});
-		channelFuture.sync();
+		latch.await();
 	}
 
 	@Override
 	protected void doClose() throws Exception{
+		final CountDownLatch latch = new CountDownLatch(1);
 		if(null != channel){
-			channel.close().sync();
+			channel.close().addListener(new ChannelFutureListener() {
+				@Override
+				public void operationComplete(ChannelFuture future) throws Exception{
+					latch.countDown();
+				}
+			});
 		}
+		latch.await();
 	}
 
 }

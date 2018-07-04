@@ -10,6 +10,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.CountDownLatch;
 
 import com.jcute.core.network.NetWorkAddress;
 import com.jcute.core.network.NetWorkManager;
@@ -35,6 +36,7 @@ public class DefaultNetClient extends AbstractNetClient{
 
 	@Override
 	protected void doStart() throws Exception{
+		final CountDownLatch latch = new CountDownLatch(1);
 		Bootstrap bootstrap = new Bootstrap();
 		bootstrap.group(this.netWorkManager.getWorkEventLoopGroup());
 		bootstrap.channel(NioSocketChannel.class);
@@ -56,16 +58,24 @@ public class DefaultNetClient extends AbstractNetClient{
 					address = NetWorkAddress.create((InetSocketAddress)channel.localAddress());
 					logger.debug("net client start success {}",address);
 				}
+				latch.countDown();
 			}
 		});
-		channelFuture.sync();
+		latch.await();
 	}
 
 	@Override
 	protected void doClose() throws Exception{
-		if(null != this.channel){
-			this.channel.close().sync();
+		final CountDownLatch latch = new CountDownLatch(1);
+		if(null != channel){
+			channel.close().addListener(new ChannelFutureListener() {
+				@Override
+				public void operationComplete(ChannelFuture future) throws Exception{
+					latch.countDown();
+				}
+			});
 		}
+		latch.await();
 	}
 	
 }
