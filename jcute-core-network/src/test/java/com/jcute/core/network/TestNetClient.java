@@ -8,7 +8,6 @@ import com.jcute.core.network.net.NetClientHandlerFactory;
 import com.jcute.core.network.net.NetClientOptions;
 import com.jcute.core.network.net.factory.NetClientHandlerFactoryForString;
 import com.jcute.core.network.net.support.DefaultNetClientOptions;
-import com.jcute.core.network.support.DefaultNetWorkAddress;
 import com.jcute.core.network.support.DefaultNetWorkManager;
 
 public class TestNetClient{
@@ -17,7 +16,7 @@ public class TestNetClient{
 		
 		NetWorkManager netWorkManager = new DefaultNetWorkManager();
 		NetClientOptions netClientOptions = new DefaultNetClientOptions();
-		netClientOptions.setNetWorkAddress(new DefaultNetWorkAddress(9080));
+		netClientOptions.setNetWorkAddress(NetWorkAddress.create(9080));
 		NetClientHandlerFactory netClientHandlerFactory = new NetClientHandlerFactoryForString(netClientOptions){
 			@Override
 			public NetClientHandler createHandler(){

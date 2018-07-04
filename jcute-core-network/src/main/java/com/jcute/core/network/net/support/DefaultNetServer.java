@@ -15,7 +15,6 @@ import java.net.InetSocketAddress;
 import com.jcute.core.network.NetWorkAddress;
 import com.jcute.core.network.NetWorkManager;
 import com.jcute.core.network.net.NetServerOptions;
-import com.jcute.core.network.support.DefaultNetWorkAddress;
 import com.jcute.core.toolkit.logging.Logger;
 import com.jcute.core.toolkit.logging.LoggerFactory;
 
@@ -50,13 +49,13 @@ public class DefaultNetServer extends AbstractNetServer{
 				channelPipeline.addLast(new DefaultNetServerHandler(getNetServerOptions().getNetServerHandler()));
 			}
 		});
-		ChannelFuture channelFuture = serverBootstrap.bind(this.getNetServerOptions().getNetWorkAddress().toSocketAddress());
+		ChannelFuture channelFuture = serverBootstrap.bind(this.getNetServerOptions().getNetWorkAddress().getInetSocketAddress());
 		channelFuture.addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception{
 				if(future.isSuccess()){
 					channel = future.channel();
-					address = new DefaultNetWorkAddress((InetSocketAddress)channel.localAddress());
+					address = NetWorkAddress.create((InetSocketAddress)channel.localAddress());
 					logger.debug("net server start success {}",address);
 				}
 			}

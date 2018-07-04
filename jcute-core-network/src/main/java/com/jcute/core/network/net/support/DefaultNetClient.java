@@ -1,7 +1,5 @@
 package com.jcute.core.network.net.support;
 
-import java.net.InetSocketAddress;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -11,10 +9,11 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+import java.net.InetSocketAddress;
+
 import com.jcute.core.network.NetWorkAddress;
 import com.jcute.core.network.NetWorkManager;
 import com.jcute.core.network.net.NetClientOptions;
-import com.jcute.core.network.support.DefaultNetWorkAddress;
 import com.jcute.core.toolkit.logging.Logger;
 import com.jcute.core.toolkit.logging.LoggerFactory;
 
@@ -48,13 +47,13 @@ public class DefaultNetClient extends AbstractNetClient{
 				channelPipeline.addLast(new DefaultNetClientHandler(getNetClientOptions().getNetClientHandler()));
 			}
 		});
-		ChannelFuture channelFuture = bootstrap.connect(this.getNetClientOptions().getNetWorkAddress().toSocketAddress());
+		ChannelFuture channelFuture = bootstrap.connect(this.getNetClientOptions().getNetWorkAddress().getInetSocketAddress());
 		channelFuture.addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception{
 				if(future.isSuccess()){
 					channel = future.channel();
-					address = new DefaultNetWorkAddress((InetSocketAddress)channel.localAddress());
+					address = NetWorkAddress.create((InetSocketAddress)channel.localAddress());
 					logger.debug("net client start success {}",address);
 				}
 			}

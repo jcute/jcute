@@ -4,7 +4,6 @@ import com.jcute.core.network.NetWorkAddress;
 import com.jcute.core.network.net.NetServerHandlerFactory;
 import com.jcute.core.network.net.NetServerOptions;
 import com.jcute.core.network.net.factory.NetServerHandlerFactoryForString;
-import com.jcute.core.network.support.DefaultNetWorkAddress;
 
 public class DefaultNetServerOptions extends AbstractNetServerOptions{
 
@@ -18,7 +17,7 @@ public class DefaultNetServerOptions extends AbstractNetServerOptions{
 
 	@Override
 	protected NetWorkAddress doCreateDefaultNetWorkAddress(){
-		return new DefaultNetWorkAddress();
+		return NetWorkAddress.create();
 	}
 
 	@Override
