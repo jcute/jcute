@@ -137,12 +137,18 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 	protected void doStart() throws Exception{
 		long time = System.currentTimeMillis();
 		try{
-			this.pluginManager.start();
+			this.pluginManager.beforeStart();
 		}catch(Exception e){
 			logger.warn("start plugin manager failed {}",e.getMessage(),e);
 			throw e;
 		}
 		this.beforeDoStart(this.beanDefinitionFactory);
+		try{
+			this.pluginManager.start();
+		}catch(Exception e){
+			logger.warn("start plugin manager failed {}",e.getMessage(),e);
+			throw e;
+		}
 		this.beanDefinitionFactory.getBeanDefinitionRegistry().attachBeanDefinition(this.beanDefinitionFactory.createBeanDefinition(this));
 		this.beanDefinitionFactory.start();
 		logger.info("Application Context Start Success , Time Of Use {} Millisecond",System.currentTimeMillis() - time);
@@ -152,12 +158,18 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 	protected void doClose() throws Exception{
 		long time = System.currentTimeMillis();
 		try{
-			this.pluginManager.close();
+			this.pluginManager.beforeClose();
 		}catch(Exception e){
 			logger.warn("close plugin manager failed {}",e.getMessage(),e);
 			throw e;
 		}
 		this.beforeDoClose(this.beanDefinitionFactory);
+		try{
+			this.pluginManager.close();
+		}catch(Exception e){
+			logger.warn("close plugin manager failed {}",e.getMessage(),e);
+			throw e;
+		}
 		this.beanDefinitionFactory.close();
 		logger.info("Application Context Close Success , Time Of Use {} Millisecond",System.currentTimeMillis() - time);
 	}

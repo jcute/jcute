@@ -24,4 +24,8 @@ public interface PluginManager extends Stable<PluginManagerEvent,PluginManagerLi
 	
 	public Map<Class<? extends Plugin>,Annotation> resolvePlugins(Class<?> beanType);
 	
+	public void beforeStart()throws Exception;
+	
+	public void beforeClose()throws Exception;
+	
 }

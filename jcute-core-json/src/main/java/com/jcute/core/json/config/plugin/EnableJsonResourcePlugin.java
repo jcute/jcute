@@ -15,10 +15,10 @@ public class EnableJsonResourcePlugin extends Plugin{
 	}
 
 	@Override
-	protected void onStart() throws Exception{
+	protected void onBeforeStart() throws Exception{
 		BeanDefinitionFactory beanDefinitionFactory = this.getApplicationContext().getBeanDefinitionFactory();
 		ConfigSourceManager configSourceManager = beanDefinitionFactory.getConfigSourceManager();
 		configSourceManager.attachConfigSourceConverter(new ConfigSourceConverterForJson());
 	}
-	
+
 }
