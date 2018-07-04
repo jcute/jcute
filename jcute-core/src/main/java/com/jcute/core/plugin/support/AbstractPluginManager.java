@@ -18,9 +18,9 @@ import com.jcute.core.toolkit.logging.Logger;
 import com.jcute.core.toolkit.logging.LoggerFactory;
 
 public abstract class AbstractPluginManager extends AbstractStable<PluginManagerEvent,PluginManagerListener> implements PluginManager{
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(AbstractPluginManager.class);
-	
+
 	protected static final String EVENT_NAME_PLUGIN_ADD_SUCCESS = "EVENT_NAME_PLUGIN_ADD_SUCCESS";
 	protected static final String EVENT_NAME_PLUGIN_DEL_SUCCESS = "EVENT_NAME_PLUGIN_DEL_SUCCESS";
 
@@ -197,7 +197,7 @@ public abstract class AbstractPluginManager extends AbstractStable<PluginManager
 	protected void doStart() throws Exception{
 		for(Plugin plugin : this.plugins){
 			try{
-				plugin.onStart();
+				plugin.start();
 				logger.debug("plugin start success {}",this.toString());
 			}catch(Exception e){
 				e.printStackTrace();
@@ -210,7 +210,7 @@ public abstract class AbstractPluginManager extends AbstractStable<PluginManager
 	protected void doClose() throws Exception{
 		for(Plugin plugin : this.plugins){
 			try{
-				plugin.onClose();
+				plugin.close();
 				logger.debug("plugin close success {}",this.toString());
 			}catch(Exception e){
 				logger.warn(e.getMessage(),e);

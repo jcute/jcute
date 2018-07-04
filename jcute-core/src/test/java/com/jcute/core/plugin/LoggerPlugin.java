@@ -15,7 +15,7 @@ public class LoggerPlugin extends Plugin{
 	}
 
 	@Override
-	protected void onStart() throws Exception{
+	public void onStart() throws Exception{
 		EnableLoggerPlugin plugin = this.getAnnotation();
 		logger.debug("测试 -> 启动日志[{}]",plugin.level());
 	}

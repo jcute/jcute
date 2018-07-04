@@ -18,19 +18,35 @@ public abstract class Plugin{
 		this.annotation = annotation;
 	}
 
-	public void onBeforeStart() throws Exception{
+	public final void start() throws Exception{
+		this.onStart();
+	}
+
+	public final void beforeStart() throws Exception{
+		this.onBeforeStart();
+	}
+
+	public final void beforeClose() throws Exception{
+		this.onBeforeClose();
+	}
+
+	public final void close() throws Exception{
+		this.onClose();
+	}
+	
+	protected void onBeforeStart() throws Exception{
 
 	}
 
-	public void onStart() throws Exception{
+	protected void onStart() throws Exception{
 
 	}
 
-	public void onBeforeClose() throws Exception{
-		
+	protected void onBeforeClose() throws Exception{
+
 	}
 
-	public void onClose() throws Exception{
+	protected void onClose() throws Exception{
 
 	}
 
