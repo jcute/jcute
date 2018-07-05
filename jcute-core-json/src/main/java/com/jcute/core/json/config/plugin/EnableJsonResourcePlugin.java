@@ -15,7 +15,7 @@ public class EnableJsonResourcePlugin extends Plugin{
 	}
 
 	@Override
-	protected void onBeforeStart() throws Exception{
+	protected void onStart() throws Exception{
 		BeanDefinitionFactory beanDefinitionFactory = this.getApplicationContext().getBeanDefinitionFactory();
 		ConfigSourceManager configSourceManager = beanDefinitionFactory.getConfigSourceManager();
 		configSourceManager.attachConfigSourceConverter(new ConfigSourceConverterForJson());

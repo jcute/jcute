@@ -30,7 +30,8 @@ public abstract class AbstractScanner implements Scanner{
 	public static final String PROTOCOL_FILE = "file";
 	public static final String PROTOCOL_JARF = "jar";
 	public static final String CLASS_SUFFIX = ".class";
-
+	
+	private boolean verbos = false;
 	private ClassLoader classLoader;
 	private PathMatcher pathMatcher;
 	private Set<String> classPatterns;
@@ -48,7 +49,17 @@ public abstract class AbstractScanner implements Scanner{
 		this.classProcessors = new LinkedHashSet<ScannerClassProcessor>();
 		this.resourceProcessors = new LinkedHashSet<ScannerResourceProcessor>();
 	}
+	
+	@Override
+	public void setVerbos(boolean verbos){
+		this.verbos = verbos;
+	}
 
+	@Override
+	public boolean isVerbos(){
+		return this.verbos;
+	}
+	
 	@Override
 	public void setPathMatcher(PathMatcher pathMatcher){
 		if(null == pathMatcher){
@@ -264,7 +275,9 @@ public abstract class AbstractScanner implements Scanner{
 				}
 				if(!list.contains(newPattern)){
 					list.add(newPattern);
-					logger.debug("found class pattern {}",newPattern);
+					if(this.isVerbos()){
+						logger.debug("found class pattern {}",newPattern);
+					}
 				}
 			}
 		}
@@ -286,7 +299,9 @@ public abstract class AbstractScanner implements Scanner{
 				}
 				if(!list.contains(newPattern)){
 					list.add(newPattern);
-					logger.debug("found resource pattern {}",newPattern);
+					if(this.isVerbos()){
+						logger.debug("found resource pattern {}",newPattern);
+					}
 				}
 			}
 		}

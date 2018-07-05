@@ -15,59 +15,59 @@ import com.jcute.core.bean.BeanDefinitionResolver;
 import com.jcute.core.bean.exception.BeanDefinitionMultipleException;
 import com.jcute.core.bean.exception.BeanDefinitionNotFoundException;
 import com.jcute.core.config.ConfigSourceManager;
+import com.jcute.core.context.ApplicationContext;
 import com.jcute.core.toolkit.cycle.support.AbstractStable;
 import com.jcute.core.toolkit.proxy.ProxyManager;
 import com.jcute.core.util.StringUtils;
 
 public abstract class AbstractBeanDefinitionFactory extends AbstractStable<BeanDefinitionFactoryEvent,BeanDefinitionFactoryListener> implements BeanDefinitionFactory{
 
-	protected BeanDefinitionRegistry beanDefinitionRegistry;
-	protected BeanDefinitionResolver beanDefinitionResolver;
-	protected ConfigSourceManager configSourceManager;
-	protected ProxyManager proxyManager;
-	
-	public AbstractBeanDefinitionFactory(){
-		this.configSourceManager = this.createConfigSourceManager();
-		this.proxyManager = this.createProxyManager();
-		this.beanDefinitionRegistry = this.createBeanDefinitionRegistry();
-		this.beanDefinitionResolver = this.createBeanDefinitionResolver(this,this.beanDefinitionRegistry);
+	private ApplicationContext applicationContext;
+
+	public AbstractBeanDefinitionFactory(ApplicationContext applicationContext){
+		if(null == applicationContext){
+			throw new IllegalArgumentException("application context must not be null");
+		}
+		this.applicationContext = applicationContext;
 	}
-	
+
 	@Override
 	protected void doStart() throws Exception{
-		this.beanDefinitionRegistry.attachBeanDefinition(this.createBeanDefinition(this));
-		this.beanDefinitionRegistry.attachBeanDefinition(this.createBeanDefinition(this.beanDefinitionRegistry));
-		this.beanDefinitionRegistry.attachBeanDefinition(this.createBeanDefinition(this.beanDefinitionResolver));
-		this.beanDefinitionRegistry.start();
+		this.getBeanDefinitionRegistry().attachBeanDefinition(this.createBeanDefinition(this));
+		this.getBeanDefinitionRegistry().attachBeanDefinition(this.createBeanDefinition(this.applicationContext));
+		this.getBeanDefinitionRegistry().attachBeanDefinition(this.createBeanDefinition(this.getBeanDefinitionRegistry()));
+		this.getBeanDefinitionRegistry().attachBeanDefinition(this.createBeanDefinition(this.getBeanDefinitionResolver()));
 	}
 
 	@Override
 	protected void doClose() throws Exception{
-		this.beanDefinitionRegistry.close();
-		this.beanDefinitionRegistry = null;
-		this.beanDefinitionResolver = null;
+	}
+
+	@Override
+	public ApplicationContext getApplicationContext(){
+		return this.applicationContext;
 	}
 
 	@Override
 	public BeanDefinitionRegistry getBeanDefinitionRegistry(){
-		return this.beanDefinitionRegistry;
+		return this.applicationContext.getBeanDefinitionRegistry();
 	}
 
 	@Override
 	public BeanDefinitionResolver getBeanDefinitionResolver(){
-		return this.beanDefinitionResolver;
+		return this.applicationContext.getBeanDefinitionResolver();
 	}
 
 	@Override
 	public ConfigSourceManager getConfigSourceManager(){
-		return this.configSourceManager;
+		return this.applicationContext.getConfigSourceManager();
 	}
-	
+
 	@Override
 	public ProxyManager getProxyManager(){
-		return this.proxyManager;
+		return this.applicationContext.getProxyManager();
 	}
-	
+
 	@Override
 	public BeanDefinition getBeanDefinition(Class<?> beanType,String beanName) throws BeanDefinitionNotFoundException,BeanDefinitionMultipleException{
 		if(null == beanType && StringUtils.isEmpty(beanName)){
@@ -136,7 +136,7 @@ public abstract class AbstractBeanDefinitionFactory extends AbstractStable<BeanD
 			throw new IllegalArgumentException("bean type must not be null");
 		}
 		Map<String,BeanDefinition> result = new HashMap<String,BeanDefinition>();
-		Iterator<Entry<String,BeanDefinition>> iter = this.beanDefinitionRegistry.iterator();
+		Iterator<Entry<String,BeanDefinition>> iter = this.getBeanDefinitionRegistry().iterator();
 		while(iter.hasNext()){
 			Entry<String,BeanDefinition> entry = iter.next();
 			if(entry.getValue().isAssignable(beanType)){
@@ -151,7 +151,7 @@ public abstract class AbstractBeanDefinitionFactory extends AbstractStable<BeanD
 
 	@Override
 	public Map<String,BeanDefinition> getAllBeanDefinitions() throws BeanDefinitionNotFoundException{
-		return this.beanDefinitionRegistry.getAllBeanDefinitions();
+		return this.getBeanDefinitionRegistry().getAllBeanDefinitions();
 	}
 
 	@Override
@@ -184,14 +184,4 @@ public abstract class AbstractBeanDefinitionFactory extends AbstractStable<BeanD
 		return this.createBeanDefinition(parentBeanDefinition,createBeanMethod,null,null);
 	}
 
-	protected BeanDefinitionRegistry createBeanDefinitionRegistry(){
-		return new DefaultBeanDefinitionRegistry(this);
-	}
-
-	protected abstract BeanDefinitionResolver createBeanDefinitionResolver(BeanDefinitionFactory beanDefinitionFactory,BeanDefinitionRegistry beanDefinitionRegistry);
-	
-	protected abstract ConfigSourceManager createConfigSourceManager();
-	
-	protected abstract ProxyManager createProxyManager();
-	
 }

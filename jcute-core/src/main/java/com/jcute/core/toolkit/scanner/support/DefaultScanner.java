@@ -131,7 +131,9 @@ public class DefaultScanner extends AbstractScanner implements ScannerFilter{
 						continue;
 					}
 					sets.add(scannerResourceResult);
-					logger.debug("found {}",scannerResourceResult);
+					if(this.isVerbos()){
+						logger.debug("found {}",scannerResourceResult);
+					}
 				}catch(MalformedURLException e){
 					e.printStackTrace();
 				}
@@ -175,7 +177,9 @@ public class DefaultScanner extends AbstractScanner implements ScannerFilter{
 						continue;
 					}
 					sets.add(scannerClassResult);
-					logger.debug("found {}",scannerClassResult);
+					if(this.isVerbos()){
+						logger.debug("found {}",scannerClassResult);
+					}
 				}catch(MalformedURLException e){
 					logger.warn(e.getMessage(),e);
 				}
@@ -203,7 +207,9 @@ public class DefaultScanner extends AbstractScanner implements ScannerFilter{
 					continue;
 				}
 				sets.add(scannerResourceResult);
-				logger.debug("found {}",scannerResourceResult);
+				if(this.isVerbos()){
+					logger.debug("found {}",scannerResourceResult);
+				}
 			}catch(MalformedURLException e){
 				logger.warn(e.getMessage(),e);
 			}
@@ -235,7 +241,9 @@ public class DefaultScanner extends AbstractScanner implements ScannerFilter{
 					continue;
 				}
 				sets.add(scannerClassResult);
-				logger.debug("found {}",scannerClassResult);
+				if(this.isVerbos()){
+					logger.debug("found {}",scannerClassResult);
+				}
 			}catch(MalformedURLException e){
 				logger.warn(e.getMessage(),e);
 			}

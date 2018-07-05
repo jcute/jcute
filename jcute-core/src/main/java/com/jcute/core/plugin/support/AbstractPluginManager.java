@@ -194,32 +194,6 @@ public abstract class AbstractPluginManager extends AbstractStable<PluginManager
 	}
 	
 	@Override
-	public void beforeStart() throws Exception{
-		for(Plugin plugin : this.plugins){
-			try{
-				plugin.beforeStart();
-				logger.debug("plugin before start success {}",this.toString());
-			}catch(Exception e){
-				e.printStackTrace();
-				logger.warn(e.getMessage(),e);
-			}
-		}
-	}
-
-	@Override
-	public void beforeClose() throws Exception{
-		for(Plugin plugin : this.plugins){
-			try{
-				plugin.beforeClose();
-				logger.debug("plugin before close success {}",this.toString());
-			}catch(Exception e){
-				e.printStackTrace();
-				logger.warn(e.getMessage(),e);
-			}
-		}
-	}
-
-	@Override
 	protected void doStart() throws Exception{
 		for(Plugin plugin : this.plugins){
 			try{

@@ -6,10 +6,13 @@ import java.util.Map;
 import com.jcute.core.bean.exception.BeanDefinitionMultipleException;
 import com.jcute.core.bean.exception.BeanDefinitionNotFoundException;
 import com.jcute.core.config.ConfigSourceManager;
+import com.jcute.core.context.ApplicationContext;
 import com.jcute.core.toolkit.cycle.Stable;
 import com.jcute.core.toolkit.proxy.ProxyManager;
 
 public interface BeanDefinitionFactory extends Stable<BeanDefinitionFactoryEvent,BeanDefinitionFactoryListener>{
+	
+	public ApplicationContext getApplicationContext();
 	
 	public BeanDefinitionRegistry getBeanDefinitionRegistry();
 	

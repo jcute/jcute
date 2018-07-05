@@ -1,4 +1,4 @@
-package com.jcute.core.cont.support;
+package com.jcute.core.context.support;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,12 +11,13 @@ import com.jcute.core.bean.BeanDefinitionResolver;
 import com.jcute.core.bean.exception.BeanDefinitionMultipleException;
 import com.jcute.core.bean.exception.BeanDefinitionNotFoundException;
 import com.jcute.core.config.ConfigSourceManager;
-import com.jcute.core.cont.ApplicationContext;
-import com.jcute.core.cont.ApplicationContextListener;
+import com.jcute.core.context.ApplicationContext;
+import com.jcute.core.context.ApplicationContextListener;
 import com.jcute.core.plugin.PluginManager;
 import com.jcute.core.toolkit.cycle.support.AbstractStable;
 import com.jcute.core.toolkit.logging.Logger;
 import com.jcute.core.toolkit.logging.LoggerFactory;
+import com.jcute.core.toolkit.proxy.ProxyManager;
 import com.jcute.core.util.GenericUtils;
 
 public abstract class AbstractApplicationContext extends AbstractStable<ApplicationContext,ApplicationContextListener> implements ApplicationContext{
@@ -28,13 +29,15 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 	private BeanDefinitionResolver beanDefinitionResolver;
 	private ConfigSourceManager configSourceManager;
 	private PluginManager pluginManager;
+	private ProxyManager proxyManager;
 
 	protected AbstractApplicationContext(){
+		this.proxyManager = this.createProxyManager();
 		this.pluginManager = this.createPluginManager();
 		this.configSourceManager = this.createConfigSourceManager();
-		this.beanDefinitionResolver = this.createBeanDefinitionResolver();
-		this.beanDefinitionRegistry = this.createBeanDefinitionRegistry();
-		this.beanDefinitionFactory = this.createBeanDefinitionFactory();
+		this.beanDefinitionFactory = this.createBeanDefinitionFactory(this);
+		this.beanDefinitionRegistry = this.createBeanDefinitionRegistry(this.beanDefinitionFactory);
+		this.beanDefinitionResolver = this.createBeanDefinitionResolver(this.beanDefinitionFactory,this.beanDefinitionRegistry);
 	}
 
 	@Override
@@ -60,6 +63,11 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 	@Override
 	public PluginManager getPluginManager(){
 		return this.pluginManager;
+	}
+
+	@Override
+	public ProxyManager getProxyManager(){
+		return this.proxyManager;
 	}
 
 	@Override
@@ -125,26 +133,73 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 
 	@Override
 	protected void doStart() throws Exception{
-		this.pluginManager.start();
-		this.beanDefinitionRegistry.start();
-		this.beanDefinitionFactory.start();
+		long time = System.currentTimeMillis();
+		this.beforeDoStart();
+		try{
+			this.initPlugins(this.pluginManager);
+			this.pluginManager.start();
+		}catch(Exception e){
+			logger.warn("start plugin manager failed {}",e.getMessage(),e);
+			throw e;
+		}
+		try{
+			this.beanDefinitionRegistry.start();
+		}catch(Exception e){
+			logger.warn("start bean definition registry failed {}",e.getMessage(),e);
+			throw e;
+		}
+		try{
+			this.beanDefinitionFactory.start();
+		}catch(Exception e){
+			logger.warn("start bean definition factory failed {}",e.getMessage(),e);
+			throw e;
+		}
+		logger.info("Application Context Start Success , Time Of Use {} Millisecond",System.currentTimeMillis() - time);
 	}
 
 	@Override
 	protected void doClose() throws Exception{
-		this.beanDefinitionFactory.close();
-		this.beanDefinitionRegistry.close();
-		this.pluginManager.close();
+		long time = System.currentTimeMillis();
+		this.beforeDoClose();
+		try{
+			this.pluginManager.close();
+		}catch(Exception e){
+			logger.warn("close plugin manager failed {}",e.getMessage(),e);
+			throw e;
+		}
+		try{
+			this.beanDefinitionRegistry.close();
+		}catch(Exception e){
+			logger.warn("close bean definition registry failed {}",e.getMessage(),e);
+			throw e;
+		}
+		try{
+			this.beanDefinitionFactory.close();
+		}catch(Exception e){
+			logger.warn("close bean definition factory failed {}",e.getMessage(),e);
+			throw e;
+		}
+		logger.info("Application Context Close Success , Time Of Use {} Millisecond",System.currentTimeMillis() - time);
 	}
 
-	protected abstract BeanDefinitionFactory createBeanDefinitionFactory();
+	protected void beforeDoStart(){
+	};
 
-	protected abstract BeanDefinitionRegistry createBeanDefinitionRegistry();
+	protected void beforeDoClose(){
+	};
 
-	protected abstract BeanDefinitionResolver createBeanDefinitionResolver();
+	protected abstract BeanDefinitionFactory createBeanDefinitionFactory(ApplicationContext applicationContext);
+
+	protected abstract BeanDefinitionRegistry createBeanDefinitionRegistry(BeanDefinitionFactory beanDefinitionFactory);
+
+	protected abstract BeanDefinitionResolver createBeanDefinitionResolver(BeanDefinitionFactory beanDefinitionFactory,BeanDefinitionRegistry beanDefinitionRegistry);
 
 	protected abstract ConfigSourceManager createConfigSourceManager();
 
 	protected abstract PluginManager createPluginManager();
+
+	protected abstract ProxyManager createProxyManager();
+	
+	protected abstract void initPlugins(PluginManager pluginManager);
 
 }

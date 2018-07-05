@@ -4,16 +4,14 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import com.jcute.core.bean.BeanDefinition;
-import com.jcute.core.bean.BeanDefinitionFactory;
-import com.jcute.core.bean.BeanDefinitionRegistry;
-import com.jcute.core.bean.BeanDefinitionResolver;
-import com.jcute.core.config.ConfigSourceManager;
-import com.jcute.core.config.support.DefaultConfigSourceManager;
-import com.jcute.core.toolkit.proxy.ProxyManager;
-import com.jcute.core.toolkit.proxy.support.cglib.CglibProxyManager;
+import com.jcute.core.context.ApplicationContext;
 import com.jcute.core.util.StringUtils;
 
 public class DefaultBeanDefinitionFactory extends AbstractBeanDefinitionFactory{
+	
+	public DefaultBeanDefinitionFactory(ApplicationContext applicationContext){
+		super(applicationContext);
+	}
 
 	@Override
 	public BeanDefinition createBeanDefinition(Class<?> beanType,String beanName,String beanScope){
@@ -78,19 +76,4 @@ public class DefaultBeanDefinitionFactory extends AbstractBeanDefinitionFactory{
 		return new DefaultBeanDefinitionForMethod(this,parentBeanDefinition,createBeanMethod,beanName,beanScope);
 	}
 
-	@Override
-	protected BeanDefinitionResolver createBeanDefinitionResolver(BeanDefinitionFactory beanDefinitionFactory,BeanDefinitionRegistry beanDefinitionRegistry){
-		return new DefaultBeanDefinitionResolverForAnnotation(beanDefinitionFactory,beanDefinitionRegistry);
-	}
-
-	@Override
-	protected ConfigSourceManager createConfigSourceManager(){
-		return new DefaultConfigSourceManager();
-	}
-
-	@Override
-	protected ProxyManager createProxyManager(){
-		return new CglibProxyManager();
-	}
-	
 }

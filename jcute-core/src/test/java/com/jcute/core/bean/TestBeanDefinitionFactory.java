@@ -9,7 +9,7 @@ public class TestBeanDefinitionFactory{
 	@Test
 	public void testCreate() throws Exception{
 
-		BeanDefinitionFactory beanDefinitionFactory = new DefaultBeanDefinitionFactory();
+		BeanDefinitionFactory beanDefinitionFactory = new DefaultBeanDefinitionFactory(null);
 		beanDefinitionFactory.start();
 
 		Thread.sleep(1000);
@@ -20,7 +20,7 @@ public class TestBeanDefinitionFactory{
 
 	@Test
 	public void testFind() throws Exception{
-		BeanDefinitionFactory beanDefinitionFactory = new DefaultBeanDefinitionFactory();
+		BeanDefinitionFactory beanDefinitionFactory = new DefaultBeanDefinitionFactory(null);
 		beanDefinitionFactory.start();
 
 		System.out.println(beanDefinitionFactory.getBeanDefinition(BeanDefinitionFactory.class).getBeanInstance());
@@ -33,7 +33,7 @@ public class TestBeanDefinitionFactory{
 	@Test
 	public void testClass() throws Exception{
 
-		BeanDefinitionFactory beanDefinitionFactory = new DefaultBeanDefinitionFactory();
+		BeanDefinitionFactory beanDefinitionFactory = new DefaultBeanDefinitionFactory(null);
 		BeanDefinition beanDefinition = beanDefinitionFactory.createBeanDefinition(TestService.class);
 		beanDefinitionFactory.getBeanDefinitionRegistry().attachBeanDefinition(beanDefinition);
 		beanDefinitionFactory.start();
@@ -48,7 +48,7 @@ public class TestBeanDefinitionFactory{
 	@Test
 	public void testMethod() throws Exception{
 
-		BeanDefinitionFactory beanDefinitionFactory = new DefaultBeanDefinitionFactory();
+		BeanDefinitionFactory beanDefinitionFactory = new DefaultBeanDefinitionFactory(null);
 		BeanDefinition beanDefinition = beanDefinitionFactory.createBeanDefinition(TestService.class);
 		BeanDefinition childBeanDefinition = beanDefinitionFactory.createBeanDefinition(beanDefinition,TestService.class.getMethod("childService"));
 

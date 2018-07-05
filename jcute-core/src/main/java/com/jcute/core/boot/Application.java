@@ -1,7 +1,6 @@
 package com.jcute.core.boot;
 
 import com.jcute.core.context.ApplicationContext;
-import com.jcute.core.context.ApplicationContextEvent;
 import com.jcute.core.context.ApplicationContextListener;
 import com.jcute.core.context.support.ApplicationContextForAnnotation;
 
@@ -19,12 +18,12 @@ public final class Application implements ApplicationContextListener{
 	}
 
 	@Override
-	public void execute(final ApplicationContextEvent event) throws Exception{
+	public void execute(final ApplicationContext event) throws Exception{
 		Runtime.getRuntime().addShutdownHook(new Thread("jcute-shutdown-hook") {
 			@Override
 			public void run(){
 				try{
-					event.getApplicationContext().close();
+					event.close();
 				}catch(Exception e){
 					e.printStackTrace();
 				}

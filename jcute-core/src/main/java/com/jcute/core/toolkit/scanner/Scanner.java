@@ -9,6 +9,10 @@ import com.jcute.core.toolkit.matcher.PathMatcher;
  */
 public interface Scanner{
 	
+	public void setVerbos(boolean verbos);
+	
+	public boolean isVerbos();
+	
 	/**
 	 * 设置路径匹配器
 	 * @param pathMatcher
