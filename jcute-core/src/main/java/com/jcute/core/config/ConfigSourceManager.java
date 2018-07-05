@@ -3,7 +3,10 @@ package com.jcute.core.config;
 import java.io.InputStream;
 import java.util.Map;
 
-public interface ConfigSourceManager{
+import com.jcute.core.toolkit.cycle.Stable;
+import com.jcute.core.toolkit.cycle.StableEvent;
+
+public interface ConfigSourceManager extends StableEvent,Stable<ConfigSourceManager,ConfigSourceManagerListener>{
 
 	public void attachConfigSource(ConfigSource configSource);
 

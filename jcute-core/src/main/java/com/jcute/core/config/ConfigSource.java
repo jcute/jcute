@@ -5,6 +5,7 @@ public interface ConfigSource{
 	public static final String EXTENSION_MAP = "map";
 	public static final String EXTENSION_PROPERTIES = "properties";
 	public static final String EXTENSION_XML = "xml";
+	public static final String EXTENSION_JSON = "json";
 	
 	public boolean hasConfigValue(String configName);
 	

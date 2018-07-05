@@ -134,7 +134,6 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 	@Override
 	protected void doStart() throws Exception{
 		long time = System.currentTimeMillis();
-		this.beforeDoStart();
 		try{
 			this.initPlugins(this.pluginManager);
 			this.pluginManager.start();
@@ -142,6 +141,13 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 			logger.warn("start plugin manager failed {}",e.getMessage(),e);
 			throw e;
 		}
+		try{
+			this.configSourceManager.start();
+		}catch(Exception e){
+			logger.warn("start config source manager failed {}",e.getMessage(),e);
+			throw e;
+		}
+		this.beforeDoStart();
 		try{
 			this.beanDefinitionRegistry.start();
 		}catch(Exception e){
@@ -160,13 +166,19 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 	@Override
 	protected void doClose() throws Exception{
 		long time = System.currentTimeMillis();
-		this.beforeDoClose();
 		try{
 			this.pluginManager.close();
 		}catch(Exception e){
 			logger.warn("close plugin manager failed {}",e.getMessage(),e);
 			throw e;
 		}
+		try{
+			this.configSourceManager.close();
+		}catch(Exception e){
+			logger.warn("close config source manager failed {}",e.getMessage(),e);
+			throw e;
+		}
+		this.beforeDoClose();
 		try{
 			this.beanDefinitionRegistry.close();
 		}catch(Exception e){

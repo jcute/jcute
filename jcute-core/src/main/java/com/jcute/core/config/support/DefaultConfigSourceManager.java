@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.jcute.core.config.ConfigName;
 import com.jcute.core.config.ConfigValue;
 import com.jcute.core.config.ConfigValueFrom;
+import com.jcute.core.config.converter.ConfigSourceConverterForJson;
 import com.jcute.core.config.converter.ConfigSourceConverterForProperties;
 import com.jcute.core.config.converter.ConfigSourceConverterForXml;
 import com.jcute.core.config.converter.ConfigValueConverterForBigDecimal;
@@ -26,9 +27,11 @@ public class DefaultConfigSourceManager extends AbstractConfigSourceManager{
 
 	private Map<ConfigName,ConfigValue<?>> caches = new ConcurrentHashMap<ConfigName,ConfigValue<?>>();
 
-	public DefaultConfigSourceManager(){
+	@Override
+	protected void doStart() throws Exception{
 		this.attachConfigSourceConverter(new ConfigSourceConverterForProperties());
 		this.attachConfigSourceConverter(new ConfigSourceConverterForXml());
+		this.attachConfigSourceConverter(new ConfigSourceConverterForJson());
 		
 		this.attachConfigValueConverter(new ConfigValueConverterForBoolean());
 		this.attachConfigValueConverter(new ConfigValueConverterForDouble());
@@ -43,9 +46,16 @@ public class DefaultConfigSourceManager extends AbstractConfigSourceManager{
 
 		this.attachConfigSource(new DefaultConfigSourceForSystemEnvironment());
 		this.attachConfigSource(new DefaultConfigSourceForSystemProperties());
-
 	}
 
+	@Override
+	protected void doClose() throws Exception{
+		this.caches.clear();
+		this.configSourceConverters.clear();
+		this.configValueConverters.clear();
+		this.configSources.clear();
+	}
+	
 	@Override
 	protected ConfigName createConfigName(String configName){
 		return new DefaultConfigName(configName);

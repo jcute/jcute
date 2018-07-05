@@ -1,0 +1,9 @@
+{
+	name:"稀里哗啦",
+	server:{
+		name:"测试",
+		config:{
+			port:9527
+		}
+	}
+}

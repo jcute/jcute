@@ -147,9 +147,10 @@ public class ApplicationContextForAnnotation extends AbstractApplicationContext{
 				ScannerClassResult scannerClassResult = (ScannerClassResult)scannerResult;
 				if(null != pluginManager){
 					this.initPlugin(pluginManager,scannerClassResult);
+				}else{
+					this.initComponentScan(scannerClassResult,packageNames,pluginManager);
+					this.initConfigSource(scannerClassResult);
 				}
-				this.initComponentScan(scannerClassResult,packageNames,pluginManager);
-				this.initConfigSource(scannerClassResult);
 			}
 		}
 	}

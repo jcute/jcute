@@ -28,6 +28,11 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
 			<optional>true</optional>
@@ -59,6 +64,7 @@
 							<includes>
 								<include>cglib:cglib-nodep</include>
 								<include>org.objenesis:objenesis</include>
+								<include>com.alibaba:fastjson</include>
 							</includes>
 							<rules>
 								<rule>
@@ -68,6 +74,10 @@
 								<rule>
 									<pattern>org.objenesis.**</pattern>
 									<result>com.jcute.core.toolkit.objenesis.@1</result>
+								</rule>
+								<rule>
+									<pattern>com.alibaba.fastjson.**</pattern>
+									<result>com.jcute.core.toolkit.json.@1</result>
 								</rule>
 								<keep>
 									<pattern>com.jcute.core.**</pattern>

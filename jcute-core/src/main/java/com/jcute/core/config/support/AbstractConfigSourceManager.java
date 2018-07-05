@@ -9,14 +9,16 @@ import com.jcute.core.config.ConfigName;
 import com.jcute.core.config.ConfigSource;
 import com.jcute.core.config.ConfigSourceConverter;
 import com.jcute.core.config.ConfigSourceManager;
+import com.jcute.core.config.ConfigSourceManagerListener;
 import com.jcute.core.config.ConfigValue;
 import com.jcute.core.config.ConfigValueConverter;
 import com.jcute.core.config.ConfigValueFrom;
+import com.jcute.core.toolkit.cycle.support.AbstractStable;
 import com.jcute.core.toolkit.logging.Logger;
 import com.jcute.core.toolkit.logging.LoggerFactory;
 import com.jcute.core.util.GenericUtils;
 
-public abstract class AbstractConfigSourceManager implements ConfigSourceManager{
+public abstract class AbstractConfigSourceManager extends AbstractStable<ConfigSourceManager,ConfigSourceManagerListener> implements ConfigSourceManager{
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractConfigSourceManager.class);
 
@@ -238,7 +240,12 @@ public abstract class AbstractConfigSourceManager implements ConfigSourceManager
 			return this.createConfigValue(configNameObject,null,ConfigValueFrom.NotFound);
 		}
 	}
-
+	
+	@Override
+	protected ConfigSourceManager createEvent(){
+		return this;
+	}
+	
 	protected <T>ConfigValue<T> createConfigValue(ConfigName configName,T resultValue,ConfigValueFrom configValueFrom){
 		return new AbstractConfigValue<T>(resultValue,configValueFrom) {};
 	}
