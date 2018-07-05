@@ -1,4 +1,4 @@
-package com.jcute.core.context.support;
+package com.jcute.core.cont.support;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,30 +11,30 @@ import com.jcute.core.bean.BeanDefinitionResolver;
 import com.jcute.core.bean.exception.BeanDefinitionMultipleException;
 import com.jcute.core.bean.exception.BeanDefinitionNotFoundException;
 import com.jcute.core.config.ConfigSourceManager;
-import com.jcute.core.context.ApplicationContext;
-import com.jcute.core.context.ApplicationContextEvent;
-import com.jcute.core.context.ApplicationContextListener;
+import com.jcute.core.cont.ApplicationContext;
+import com.jcute.core.cont.ApplicationContextListener;
 import com.jcute.core.plugin.PluginManager;
 import com.jcute.core.toolkit.cycle.support.AbstractStable;
 import com.jcute.core.toolkit.logging.Logger;
 import com.jcute.core.toolkit.logging.LoggerFactory;
 import com.jcute.core.util.GenericUtils;
 
-public abstract class AbstractApplicationContext extends AbstractStable<ApplicationContextEvent,ApplicationContextListener> implements ApplicationContext{
+public abstract class AbstractApplicationContext extends AbstractStable<ApplicationContext,ApplicationContextListener> implements ApplicationContext{
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractApplicationContext.class);
 
-	protected BeanDefinitionFactory beanDefinitionFactory;
-	protected PluginManager pluginManager;
+	private BeanDefinitionFactory beanDefinitionFactory;
+	private BeanDefinitionRegistry beanDefinitionRegistry;
+	private BeanDefinitionResolver beanDefinitionResolver;
+	private ConfigSourceManager configSourceManager;
+	private PluginManager pluginManager;
 
-	public AbstractApplicationContext(){
-		this.pluginManager = this.createPluginManager(this);
+	protected AbstractApplicationContext(){
+		this.pluginManager = this.createPluginManager();
+		this.configSourceManager = this.createConfigSourceManager();
+		this.beanDefinitionResolver = this.createBeanDefinitionResolver();
+		this.beanDefinitionRegistry = this.createBeanDefinitionRegistry();
 		this.beanDefinitionFactory = this.createBeanDefinitionFactory();
-	}
-
-	@Override
-	public ConfigSourceManager getConfigSourceManager(){
-		return this.beanDefinitionFactory.getConfigSourceManager();
 	}
 
 	@Override
@@ -44,12 +44,22 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 
 	@Override
 	public BeanDefinitionRegistry getBeanDefinitionRegistry(){
-		return this.beanDefinitionFactory.getBeanDefinitionRegistry();
+		return this.beanDefinitionRegistry;
 	}
 
 	@Override
 	public BeanDefinitionResolver getBeanDefinitionResolver(){
-		return this.beanDefinitionFactory.getBeanDefinitionResolver();
+		return this.beanDefinitionResolver;
+	}
+
+	@Override
+	public ConfigSourceManager getConfigSourceManager(){
+		return this.configSourceManager;
+	}
+
+	@Override
+	public PluginManager getPluginManager(){
+		return this.pluginManager;
 	}
 
 	@Override
@@ -109,77 +119,32 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 	}
 
 	@Override
-	protected ApplicationContextEvent createEvent(){
-		return new ApplicationContextEvent() {
-			@Override
-			public BeanDefinitionResolver getBeanDefinitionResolver(){
-				return getBeanDefinitionResolver();
-			}
-
-			@Override
-			public BeanDefinitionRegistry getBeanDefinitionRegistry(){
-				return getBeanDefinitionRegistry();
-			}
-
-			@Override
-			public BeanDefinitionFactory getBeanDefinitionFactory(){
-				return getBeanDefinitionFactory();
-			}
-
-			@Override
-			public ApplicationContext getApplicationContext(){
-				return AbstractApplicationContext.this;
-			}
-		};
+	protected ApplicationContext createEvent(){
+		return this;
 	}
 
 	@Override
 	protected void doStart() throws Exception{
-		long time = System.currentTimeMillis();
-		try{
-			this.pluginManager.beforeStart();
-		}catch(Exception e){
-			logger.warn("start plugin manager failed {}",e.getMessage(),e);
-			throw e;
-		}
-		this.beforeDoStart(this.beanDefinitionFactory);
-		try{
-			this.pluginManager.start();
-		}catch(Exception e){
-			logger.warn("start plugin manager failed {}",e.getMessage(),e);
-			throw e;
-		}
-		this.beanDefinitionFactory.getBeanDefinitionRegistry().attachBeanDefinition(this.beanDefinitionFactory.createBeanDefinition(this));
+		this.pluginManager.start();
+		this.beanDefinitionRegistry.start();
 		this.beanDefinitionFactory.start();
-		logger.info("Application Context Start Success , Time Of Use {} Millisecond",System.currentTimeMillis() - time);
 	}
 
 	@Override
 	protected void doClose() throws Exception{
-		long time = System.currentTimeMillis();
-		try{
-			this.pluginManager.beforeClose();
-		}catch(Exception e){
-			logger.warn("close plugin manager failed {}",e.getMessage(),e);
-			throw e;
-		}
-		this.beforeDoClose(this.beanDefinitionFactory);
-		try{
-			this.pluginManager.close();
-		}catch(Exception e){
-			logger.warn("close plugin manager failed {}",e.getMessage(),e);
-			throw e;
-		}
 		this.beanDefinitionFactory.close();
-		logger.info("Application Context Close Success , Time Of Use {} Millisecond",System.currentTimeMillis() - time);
+		this.beanDefinitionRegistry.close();
+		this.pluginManager.close();
 	}
 
-	protected abstract void beforeDoStart(BeanDefinitionFactory beanDefinitionFactory);
-
-	protected abstract void beforeDoClose(BeanDefinitionFactory beanDefinitionFactory);
-
-	protected abstract PluginManager createPluginManager(ApplicationContext applicationContext);
-
 	protected abstract BeanDefinitionFactory createBeanDefinitionFactory();
+
+	protected abstract BeanDefinitionRegistry createBeanDefinitionRegistry();
+
+	protected abstract BeanDefinitionResolver createBeanDefinitionResolver();
+
+	protected abstract ConfigSourceManager createConfigSourceManager();
+
+	protected abstract PluginManager createPluginManager();
 
 }
