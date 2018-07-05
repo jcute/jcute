@@ -147,6 +147,7 @@ public abstract class AbstractApplicationContext extends AbstractStable<Applicat
 			logger.warn("start config source manager failed {}",e.getMessage(),e);
 			throw e;
 		}
+		this.getBeanDefinitionRegistry().attachBeanDefinition(this.getBeanDefinitionFactory().createBeanDefinition(this));
 		this.beforeDoStart();
 		try{
 			this.beanDefinitionRegistry.start();

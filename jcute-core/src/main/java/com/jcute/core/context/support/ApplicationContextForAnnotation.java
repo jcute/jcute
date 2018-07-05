@@ -86,6 +86,7 @@ public class ApplicationContextForAnnotation extends AbstractApplicationContext{
 
 	@Override
 	protected void beforeDoStart(){
+		
 		String packageName = this.runner.getPackage() == null ? "" : this.runner.getPackage().getName();
 		Set<String> packageNames = new LinkedHashSet<String>();
 		packageNames.add(packageName);

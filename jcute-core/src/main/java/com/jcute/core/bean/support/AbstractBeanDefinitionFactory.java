@@ -34,7 +34,6 @@ public abstract class AbstractBeanDefinitionFactory extends AbstractStable<BeanD
 	@Override
 	protected void doStart() throws Exception{
 		this.getBeanDefinitionRegistry().attachBeanDefinition(this.createBeanDefinition(this));
-		this.getBeanDefinitionRegistry().attachBeanDefinition(this.createBeanDefinition(this.applicationContext));
 		this.getBeanDefinitionRegistry().attachBeanDefinition(this.createBeanDefinition(this.getBeanDefinitionRegistry()));
 		this.getBeanDefinitionRegistry().attachBeanDefinition(this.createBeanDefinition(this.getBeanDefinitionResolver()));
 	}
