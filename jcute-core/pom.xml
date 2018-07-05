@@ -65,6 +65,7 @@
 								<include>cglib:cglib-nodep</include>
 								<include>org.objenesis:objenesis</include>
 								<include>com.alibaba:fastjson</include>
+								<include>org.yaml:snakeyaml</include>
 							</includes>
 							<rules>
 								<rule>
