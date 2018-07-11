@@ -1,4 +1,4 @@
-package com.jcute.core.net.looper;
+package com.jcute.core.net.loop;
 
 import com.jcute.core.toolkit.cycle.StableListener;
 

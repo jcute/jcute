@@ -1,8 +1,8 @@
-package com.jcute.core.net.looper.support;
+package com.jcute.core.net.loop.support;
 
-import com.jcute.core.net.looper.EventLoop;
-import com.jcute.core.net.looper.EventLoopGroup;
-import com.jcute.core.net.looper.EventLoopGroupListener;
+import com.jcute.core.net.loop.EventLoop;
+import com.jcute.core.net.loop.EventLoopGroup;
+import com.jcute.core.net.loop.EventLoopGroupListener;
 import com.jcute.core.net.toolkit.FixedAtomicInteger;
 import com.jcute.core.toolkit.cycle.support.AbstractStable;
 import com.jcute.core.toolkit.logging.Logger;

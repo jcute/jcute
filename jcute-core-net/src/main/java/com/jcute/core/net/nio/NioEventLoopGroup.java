@@ -1,6 +1,6 @@
 package com.jcute.core.net.nio;
 
-import com.jcute.core.net.looper.EventLoopGroup;
+import com.jcute.core.net.loop.EventLoopGroup;
 
 public interface NioEventLoopGroup extends EventLoopGroup{
 

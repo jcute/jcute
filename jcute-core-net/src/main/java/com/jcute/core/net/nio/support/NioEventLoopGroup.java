@@ -1,6 +1,6 @@
 package com.jcute.core.net.nio.support;
 
-import com.jcute.core.net.looper.support.AbstractEventLoopGroup;
+import com.jcute.core.net.loop.support.AbstractEventLoopGroup;
 import com.jcute.core.util.GenericUtils;
 
 public class NioEventLoopGroup extends AbstractEventLoopGroup{
